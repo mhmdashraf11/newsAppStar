@@ -15,6 +15,7 @@ class NewsCubit extends Cubit<NewsState> {
       emit(NewsLoading());
 
       final news = await newsRepository.getTopHeadlines();
+      print("News fetched successfully: ${news.articles.length} articles");
 
       emit(
         NewsSuccess(

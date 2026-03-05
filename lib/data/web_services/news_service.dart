@@ -22,6 +22,7 @@ class NewsService {
         cancelToken: cancelToken,
         queryParameters: {"country": "us", "apiKey": apiKey},
       );
+      print(response.data);
 
       return NewsModel.fromJson(response.data);
     } on DioException catch (e) {
