@@ -31,4 +31,19 @@ class NewsService {
       );
     }
   }
+
+  Future<NewsModel> searchNews(String query) async {
+    try {
+      final response = await newsDio.get(
+        "everything",
+        queryParameters: {"q": query, "apiKey": apiKey},
+      );
+
+      return NewsModel.fromJson(response.data);
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data["message"] ?? e.message ?? "Network error",
+      );
+    }
+  }
 }

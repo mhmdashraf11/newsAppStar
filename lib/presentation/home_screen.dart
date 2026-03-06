@@ -79,9 +79,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isSearching = false;
+  final TextEditingController searchController = TextEditingController();
+  int currentIDX = 0;
   @override
   void initState() {
     super.initState();
+    context.read<NewsCubit>().getTopHeadlines();
+  }
+
+  void stopSearching() {
+    setState(() {
+      isSearching = false;
+      searchController.clear();
+    });
+
     context.read<NewsCubit>().getTopHeadlines();
   }
 
@@ -90,27 +102,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xffF5F6FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          "Simple News",
-          style: TextStyle(
-            color: MyColors.primaryColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.black87),
-            onPressed: () {},
-          ),
-          // const SizedBox(width: 8),
-          // IconButton(
-          //   icon: const Icon(Icons.wb_sunny_outlined, color: Colors.black87),
-          //   onPressed: () {},
-          // ),
-          const SizedBox(width: 10),
-        ],
+        title: isSearching
+            ? buildSearchField()
+            : const Text(
+                "Simple News",
+                style: TextStyle(
+                  color: MyColors.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+        actions: buildAppBarActions(),
       ),
       body: BlocBuilder<NewsCubit, NewsState>(
         builder: (context, state) {
@@ -134,9 +135,18 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
+        currentIndex: currentIDX,
         selectedItemColor: MyColors.primaryColor,
         unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          setState(() {
+            currentIDX = index;
+          });
+
+          if (index == 0) {
+            context.read<NewsCubit>().getTopHeadlines();
+          }
+        },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
@@ -146,5 +156,47 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  Widget buildSearchField() {
+    return TextField(
+      controller: searchController,
+      autofocus: true,
+      decoration: const InputDecoration(
+        hintText: "Search news...",
+        border: InputBorder.none,
+      ),
+      onChanged: (text) {
+        if (text.isNotEmpty) {
+          context.read<NewsCubit>().searchWithDebounce(text);
+        } else {
+          context.read<NewsCubit>().getTopHeadlines();
+        }
+      },
+    );
+  }
+
+  List<Widget> buildAppBarActions() {
+    if (isSearching) {
+      return [
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            stopSearching();
+          },
+        ),
+      ];
+    } else {
+      return [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {
+            setState(() {
+              isSearching = true;
+            });
+          },
+        ),
+      ];
+    }
   }
 }

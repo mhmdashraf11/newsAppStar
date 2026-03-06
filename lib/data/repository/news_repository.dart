@@ -8,4 +8,8 @@ class NewsRepository {
     final news = await newsApiService.getTopHeadlines();
     return news;
   }
-} 
+
+  Future<NewsModel> searchNews(String query) {
+    return NewsService().searchNews(query);
+  }
+}
