@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app_star/business_logic/cubit/news_cubit.dart';
+import 'package:news_app_star/data/models/news_model.dart';
 import 'package:news_app_star/data/repository/news_repository.dart';
 import 'package:news_app_star/data/web_services/news_service.dart';
+import 'package:news_app_star/presentation/details_screen.dart';
 import 'package:news_app_star/presentation/home_screen.dart';
 
 class AppRouter {
@@ -16,9 +18,15 @@ class AppRouter {
     switch (settings.name) {
       case "/":
         return MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => newsCubit,
-            child: HomeScreen(),
+          builder: (context) =>
+              BlocProvider(create: (context) => newsCubit, child: HomeScreen()),
+        );
+      case "details":
+        final article = settings.arguments as Article;
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider.value(
+            value: newsCubit,
+            child: DetailsScreen(article: article),
           ),
         );
     }

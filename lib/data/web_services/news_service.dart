@@ -6,7 +6,6 @@ class NewsService {
   static final NewsService _instance = NewsService._internal();
   factory NewsService() => _instance;
   NewsService._internal();
-  // final newsApi = "$apiLink$apiTopHeadlines?country=us&apiKey=$apiKey";
   final newsDio = Dio(
     BaseOptions(connectTimeout: const Duration(seconds: 4), baseUrl: apiLink),
   );
