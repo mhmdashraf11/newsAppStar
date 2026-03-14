@@ -36,21 +36,38 @@ class DetailsScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (article.urlToImage != null)
+          // if (article.urlToImage != null)
+          //   Image.network(
+          //     article.urlToImage!,
+          //     height: 200,
+          //     width: double.infinity,
+          //     fit: BoxFit.cover,
+          //   ),
+          if (article.urlToImage != null && article.urlToImage!.isNotEmpty)
             Image.network(
               article.urlToImage!,
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
-            ),
 
+              /// prevents crash if image fails
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: Icon(Icons.broken_image, size: 40),
+                  ),
+                );
+              },
+            ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  PublishedFromNow(article.publishedAt),
+                  PublishedFromNow(article.publishedAt!),
                   style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 const SizedBox(height: 16),

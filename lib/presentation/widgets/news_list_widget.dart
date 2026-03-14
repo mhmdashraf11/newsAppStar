@@ -37,7 +37,20 @@ class NewsListWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (article.urlToImage != null)
+                  // if (article.urlToImage != null)
+                  //   ClipRRect(
+                  //     borderRadius: const BorderRadius.vertical(
+                  //       top: Radius.circular(12),
+                  //     ),
+                  //     child: Image.network(
+                  //       article.urlToImage ?? "",
+                  //       height: 180,
+                  //       width: double.infinity,
+                  //       fit: BoxFit.cover,
+                  //     ),
+                  //   ),
+                  if (article.urlToImage != null &&
+                      article.urlToImage!.isNotEmpty)
                     ClipRRect(
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(12),
@@ -47,16 +60,24 @@ class NewsListWidget extends StatelessWidget {
                         height: 180,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 180,
+                            color: Colors.grey[300],
+                            child: const Center(
+                              child: Icon(Icons.broken_image),
+                            ),
+                          );
+                        },
                       ),
                     ),
-
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          article.title,
+                          article.title ?? "No title",
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -77,7 +98,9 @@ class NewsListWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              PublishedFromNow(article.publishedAt),
+                              article.publishedAt != null
+                                  ? PublishedFromNow(article.publishedAt!)
+                                  : "",
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12,

@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     context.read<NewsCubit>().getTopHeadlines();
-    screens = [buildHomeBody(), const Center(child: Text("Saved News"))];
+    screens = [const BuildHomeBody(), const Center(child: Text("Saved News"))];
   }
 
   void stopSearching() {
@@ -38,15 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // title: isSearching
-        //     ? buildSearchField()
-        //     : const Text(
-        //         "Simple News",
-        //         style: TextStyle(
-        //           color: MyColors.primaryColor,
-        //           fontWeight: FontWeight.bold,
-        //         ),
-        //       ),
+        // backgroundColor: Colors.white,
         title: currentIDX == 0
             ? (isSearching
                   ? buildSearchField()
@@ -134,8 +126,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class buildHomeBody extends StatelessWidget {
-  const buildHomeBody({super.key});
+class BuildHomeBody extends StatelessWidget {
+  const BuildHomeBody({super.key});
 
   @override
   Widget build(BuildContext context) {

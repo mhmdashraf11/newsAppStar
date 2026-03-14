@@ -13,6 +13,12 @@ class NewsCubit extends Cubit<NewsState> {
   List<Article> articles = [];
   Timer? _debounce;
   String selectedCategory = "general";
+  @override
+  Future<void> close() {
+    _debounce?.cancel();
+    return super.close();
+  }
+
   Future<void> getTopHeadlines() async {
     try {
       emit(NewsLoading());

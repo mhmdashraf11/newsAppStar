@@ -26,7 +26,9 @@ class NewsService {
       return NewsModel.fromJson(response.data);
     } on DioException catch (e) {
       throw Exception(
-        e.response?.data["message"] ?? e.message ?? "Network error",
+        e.response?.data?["message"]?.toString() ??
+            e.message ??
+            "Network error",
       );
     }
   }
@@ -41,7 +43,9 @@ class NewsService {
       return NewsModel.fromJson(response.data);
     } on DioException catch (e) {
       throw Exception(
-        e.response?.data["message"] ?? e.message ?? "Network error",
+        e.response?.data?["message"]?.toString() ??
+            e.message ??
+            "Network error",
       );
     }
   }
