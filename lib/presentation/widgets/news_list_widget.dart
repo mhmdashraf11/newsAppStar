@@ -106,18 +106,60 @@ class NewsListWidget extends StatelessWidget {
                                 fontSize: 12,
                               ),
                             ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: MyColors.primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    context.read<NewsCubit>().isArticleSaved(
+                                          article,
+                                        )
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_border,
+                                    color: MyColors.primaryColor,
+                                  ),
+                                  onPressed: () {
+                                    final newsCubit = context.read<NewsCubit>();
+                                    if (newsCubit.isArticleSaved(article)) {
+                                      newsCubit.removeSavedArticle(article);
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Removed from saved'),
+                                        ),
+                                      );
+                                    } else {
+                                      newsCubit.saveArticle(article);
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Saved article'),
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
-                              ),
-                              child: const Text(
-                                "Read More",
-                                style: TextStyle(color: Colors.white),
-                              ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      'details',
+                                      arguments: article,
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: MyColors.primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    "Read More",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),

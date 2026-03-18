@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app_star/business_logic/cubit/news_cubit.dart';
 import 'package:news_app_star/constants/my_colors.dart';
 import 'package:news_app_star/data/models/news_model.dart';
 import 'package:news_app_star/presentation/functions/published_from.dart';
@@ -8,6 +10,7 @@ class DetailsScreen extends StatelessWidget {
   final Article article;
   @override
   Widget build(BuildContext context) {
+    final isSaved = context.read<NewsCubit>().isArticleSaved(article);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -22,13 +25,29 @@ class DetailsScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.bookmark_border,
-              color: MyColors.primaryColor,
-            ),
-            onPressed: () {
-              // Implement save functionality here
+          BlocBuilder<NewsCubit, NewsState>(
+            builder: (context, state) {
+              final cubit = context.read<NewsCubit>();
+              final saved = cubit.isArticleSaved(article);
+              return IconButton(
+                icon: Icon(
+                  saved ? Icons.bookmark : Icons.bookmark_border,
+                  color: MyColors.primaryColor,
+                ),
+                onPressed: () {
+                  if (saved) {
+                    cubit.removeSavedArticle(article);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Removed from saved')),
+                    );
+                  } else {
+                    cubit.saveArticle(article);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Article saved')),
+                    );
+                  }
+                },
+              );
             },
           ),
         ],

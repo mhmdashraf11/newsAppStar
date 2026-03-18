@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app_star/business_logic/cubit/news_cubit.dart';
 import 'package:news_app_star/constants/my_colors.dart';
+import 'package:news_app_star/presentation/saved_screen.dart';
 import 'package:news_app_star/presentation/widgets/news_error_widget.dart';
 import 'package:news_app_star/presentation/widgets/news_list_widget.dart';
 import 'package:news_app_star/presentation/widgets/news_loading_widget.dart';
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     context.read<NewsCubit>().getTopHeadlines();
-    screens = [const BuildHomeBody(), const Center(child: Text("Saved News"))];
+    screens = [const BuildHomeBody(), const SavedScreen()];
   }
 
   void stopSearching() {

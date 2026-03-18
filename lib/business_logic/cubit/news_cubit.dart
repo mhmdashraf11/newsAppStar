@@ -10,13 +10,39 @@ part 'news_state.dart';
 class NewsCubit extends Cubit<NewsState> {
   final NewsRepository newsRepository;
   NewsCubit(this.newsRepository) : super(NewsInitial());
-  List<Article> articles = [];
+
+  final List<Article> savedArticles = [];
   Timer? _debounce;
   String selectedCategory = "general";
+
   @override
   Future<void> close() {
     _debounce?.cancel();
     return super.close();
+  }
+
+  bool isArticleSaved(Article article) {
+    return savedArticles.any((item) => item.url == article.url);
+  }
+
+  void saveArticle(Article article) {
+    if (!isArticleSaved(article)) {
+      savedArticles.add(article);
+    }
+
+    final state = this.state;
+    if (state is NewsSuccess) {
+      emit(state.copyWith(savedArticles: List.of(savedArticles)));
+    }
+  }
+
+  void removeSavedArticle(Article article) {
+    savedArticles.removeWhere((item) => item.url == article.url);
+
+    final state = this.state;
+    if (state is NewsSuccess) {
+      emit(state.copyWith(savedArticles: List.of(savedArticles)));
+    }
   }
 
   Future<void> getTopHeadlines() async {
@@ -30,6 +56,7 @@ class NewsCubit extends Cubit<NewsState> {
         NewsSuccess(
           articles: news.articles,
           selectedCategory: selectedCategory,
+          savedArticles: List.of(savedArticles),
         ),
       );
     } catch (error) {
@@ -47,6 +74,7 @@ class NewsCubit extends Cubit<NewsState> {
         NewsSuccess(
           articles: news.articles,
           selectedCategory: selectedCategory,
+          savedArticles: List.of(savedArticles),
         ),
       );
     } catch (error) {
